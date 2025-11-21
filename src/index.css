@@ -1,0 +1,488 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap');
+
+:root {
+  --bg-color: #F5F5F0;
+  --text-color: #2D2D2D;
+  --accent-green: #8F9E8B;
+  --accent-grey: #A8A8A8;
+  --surface-color: #EBEBE6;
+
+  --font-heading: 'Outfit', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Global Font Sizes */
+  --font-xs: 12px;
+  --font-sm: 14px;
+  --font-base: 16px;
+  --font-lg: 18px;
+  --font-xl: 24px;
+
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 2rem;
+  --spacing-lg: 4rem;
+  --spacing-xl: 8rem;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* Utility classes */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: var(--font-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Navbar Styles */
+.navbar-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  padding: 1.5rem 0;
+  padding-right: var(--scrollbar-width, 0px);
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  color: var(--text-color);
+  padding: 0 2rem;
+}
+
+.nav-left,
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+}
+
+.nav-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.profile-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.profile-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.portfolio-of {
+  font-size: var(--font-xs);
+  color: var(--accent-grey);
+  font-family: var(--font-body);
+}
+
+.profile-name {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: var(--font-sm);
+  /* Adjusted to match request for small sizes generally, or keep slightly larger? Request said "all other text has the size of 14 px". Let's stick to 14px for standard text. */
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-link {
+  font-family: var(--font-body);
+  font-size: var(--font-sm);
+  color: var(--text-color);
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.nav-link:hover {
+  opacity: 1;
+}
+
+.nav-info {
+  display: flex;
+  gap: 2rem;
+  font-family: var(--font-body);
+  font-size: var(--font-sm);
+  opacity: 0.8;
+}
+
+.nav-time {
+  font-variant-numeric: tabular-nums;
+}
+
+.nav-cta {
+  font-family: var(--font-mono);
+  /* Mono font requested */
+  font-size: var(--font-sm);
+  /* 14px */
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.5rem 1.25rem;
+  border: 1px solid var(--text-color);
+  border-radius: 4px;
+  /* 4px radius */
+  transition: all 0.2s ease;
+}
+
+.glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nav-cta:hover {
+  background-color: var(--text-color);
+  color: var(--bg-color);
+}
+
+@media (max-width: 1024px) {
+
+  .nav-links,
+  .nav-info {
+    display: none;
+  }
+}
+
+/* Hero Styles */
+.hero-section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 10rem;
+  padding-bottom: 8rem;
+}
+
+.hero-header {
+  margin-bottom: 6rem;
+  /* Increased space between heading and cards */
+  text-align: left;
+  /* Align with logo */
+  /* Removed padding-left if it was there, container handles it. Logo is in navbar which aligns with container max-width. */
+}
+
+.hero-custom-margin {
+  margin: 0 20px !important;
+  max-width: none !important;
+  width: auto !important;
+  /* 
+     Dynamic padding to align with centered navbar (max-width: 1400px, padding: 2rem/32px)
+     Formula: (50vw - 700px) + 32px - 20px = 50vw - 688px
+     Min padding: 32px - 20px = 12px
+  */
+  padding-left: max(12px, calc(50% - 688px)) !important;
+  padding-right: max(12px, calc(50% - 688px)) !important;
+}
+
+@media (max-width: 768px) {
+  .hero-custom-margin {
+    /* On mobile, formula defaults to 12px. 
+       Navbar is 32px padding. Hero margin 20px. 
+       Total Hero = 20 + 12 = 32px. Matches Navbar.
+    */
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+}
+
+.subtitle {
+  color: var(--accent-grey);
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.hero-title {
+  font-size: 36px;
+  /* Fixed 36px as requested */
+}
+
+@media (min-width: 768px) {
+  .hero-title {
+    font-size: 36px;
+    /* Keeping it 36px on larger screens too as requested, or should it scale? Request said "decrease... into 36 pixel". I'll stick to 36px. */
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-title {
+    font-size: 36px;
+  }
+}
+
+.highlight {
+  color: var(--accent-green);
+}
+
+.works-grid {
+  display: flex;
+  overflow-x: auto;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  padding-bottom: 2rem;
+  /* Space for scrollbar */
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE/Edge */
+}
+
+.works-grid::-webkit-scrollbar {
+  display: none;
+  /* Chrome/Safari */
+}
+
+.work-card {
+  position: relative;
+  border-radius: 6px;
+  /* 6px radius */
+  overflow: hidden;
+  cursor: pointer;
+  width: 600px;
+  height: 743px;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+  background-color: var(--surface-color);
+  /* Fallback */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Removed work-card-bg as we are moving to a solid card with image inside */
+
+.work-content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: var(--text-color);
+  /* Changed to text color as background is light */
+}
+
+.work-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.5rem 1.5rem 0 1.5rem;
+}
+
+.work-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.work-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.work-title {
+  font-size: var(--font-sm);
+  /* Small: 14px */
+  font-family: var(--font-mono);
+  /* Mono font */
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.work-subtitle {
+  font-family: var(--font-mono);
+  font-size: var(--font-xs);
+  /* Extrasmall: 12px */
+  text-transform: uppercase;
+  opacity: 0.8;
+  letter-spacing: 0.05em;
+}
+
+.work-tags {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.work-tag {
+  font-family: var(--font-mono);
+  font-size: var(--font-xs);
+  /* Extrasmall: 12px */
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  /* Darker border for light bg */
+  border-radius: 4px;
+  background-color: transparent;
+  color: var(--text-color);
+  opacity: 0.9;
+}
+
+.work-image-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 1.5rem;
+}
+
+.work-image {
+  width: 450px;
+  height: 258px;
+  object-fit: cover;
+  border-radius: 4px;
+  /* Small radius for inner image too? */
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  transition: transform 0.5s ease;
+}
+
+.work-card:hover .work-image {
+  transform: scale(1.02);
+}
+
+@media (max-width: 768px) {
+  .work-card {
+    width: 85vw;
+    height: auto;
+    min-height: 500px;
+  }
+
+  .work-image {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 450/258;
+  }
+
+  .work-header {
+    padding: 1rem 1rem 0 1rem;
+  }
+
+  .work-image-container {
+    padding: 1rem;
+  }
+}
+
+/* Experience Styles */
+.experience-section {
+  padding: var(--spacing-xl) 0;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  margin-bottom: var(--spacing-lg);
+  font-family: var(--font-heading);
+}
+
+.experience-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.experience-item {
+  border-left: 1px solid var(--accent-grey);
+  padding-left: var(--spacing-md);
+}
+
+.experience-header {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .experience-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+}
+
+.experience-role {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.experience-period {
+  color: var(--accent-grey);
+}
+
+.experience-company {
+  font-size: 1.125rem;
+  color: var(--accent-green);
+  margin-bottom: 1rem;
+  font-family: var(--font-heading);
+  font-style: italic;
+}
+
+.experience-description {
+  max-width: 60ch;
+  color: var(--text-color);
+  opacity: 0.8;
+}

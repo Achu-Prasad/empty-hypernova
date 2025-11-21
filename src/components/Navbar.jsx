@@ -1,0 +1,100 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import profileImg from '../assets/profile.png';
+
+gsap.registerPlugin(ScrollTrigger);
+
+const navItems = [
+    { id: 'about', label: 'About Me' },
+    { id: 'works', label: 'My Works' },
+    { id: 'playground', label: 'Playground' },
+];
+
+const Navbar = () => {
+    const [time, setTime] = useState(new Date());
+    const navRef = useRef(null);
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setTime(new Date());
+        }, 1000);
+        return () => clearInterval(timer);
+    }, []);
+
+    useEffect(() => {
+        const updateScrollbarWidth = () => {
+            const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+            document.documentElement.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`);
+        };
+
+        updateScrollbarWidth();
+        window.addEventListener('resize', updateScrollbarWidth);
+
+        const showAnim = gsap.from(navRef.current, {
+            yPercent: -100,
+            paused: true,
+            duration: 0.2
+        }).progress(1);
+
+        ScrollTrigger.create({
+            start: "top top",
+            end: 99999,
+            onUpdate: (self) => {
+                self.direction === -1 ? showAnim.play() : showAnim.reverse();
+            }
+        });
+
+        return () => window.removeEventListener('resize', updateScrollbarWidth);
+    }, []);
+
+    const formatTime = (date) => {
+        return date.toLocaleTimeString('en-GB', { hour12: false }); // HH:MM:SS 24h format
+    };
+
+    return (
+        <div className="navbar-container glass-effect" ref={navRef}>
+            <motion.nav
+                className="navbar"
+                initial={{ y: -100, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+            >
+                <div className="nav-left">
+                    <div className="nav-profile">
+                        <img src={profileImg} alt="Profile" className="profile-img" />
+                        <div className="profile-text">
+                            <span className="portfolio-of">portfolio of</span>
+                            <span className="profile-name">Achu Prasad</span>
+                        </div>
+                    </div>
+
+                    <div className="nav-links">
+                        {navItems.map((item) => (
+                            <a
+                                key={item.id}
+                                href={`#${item.id}`}
+                                className="nav-link"
+                            >
+                                {item.label}
+                            </a>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="nav-right">
+                    <div className="nav-info">
+                        <span className="nav-time">{formatTime(time)}</span>
+                        <span className="nav-location">India</span>
+                    </div>
+                    <button className="nav-cta">
+                        Contact
+                    </button>
+                </div>
+            </motion.nav>
+        </div>
+    );
+};
+
+export default Navbar;
