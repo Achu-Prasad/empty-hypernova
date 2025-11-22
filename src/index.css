@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap');
 
 :root {
+  /* Light Theme with Vibegreen Accent - WCAG 2.2 Compliant */
   --bg-color: #F5F5F0;
   --text-color: #2D2D2D;
   --accent-green: #8F9E8B;
@@ -39,6 +40,19 @@ body {
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.6;
   overflow-x: hidden;
+}
+
+@media (min-width: 1024px) {
+  body {
+    cursor: none;
+  }
+
+  a,
+  button,
+  .work-card {
+    cursor: none;
+    /* Ensure pointer doesn't show up */
+  }
 }
 
 h1,
@@ -213,17 +227,29 @@ button {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   padding-top: 10rem;
-  padding-bottom: 8rem;
+  padding-bottom: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .hero-section {
+    padding-top: 14rem;
+    /* Reduced spacing for better visual balance */
+  }
 }
 
 .hero-header {
-  margin-bottom: 6rem;
-  /* Increased space between heading and cards */
+  margin-bottom: 3rem;
+  /* Mobile/Tablet: Show ~60% of cards */
   text-align: left;
-  /* Align with logo */
-  /* Removed padding-left if it was there, container handles it. Logo is in navbar which aligns with container max-width. */
+}
+
+@media (min-width: 1024px) {
+  .hero-header {
+    margin-bottom: calc(100vh - 500px);
+    /* Desktop: Show only ~5% peek of cards */
+  }
 }
 
 .hero-custom-margin {
@@ -291,6 +317,16 @@ button {
   /* IE/Edge */
 }
 
+@media (max-width: 767px) {
+  .works-grid {
+    scroll-snap-type: x mandatory;
+    padding-inline: 10vw;
+    /* Center the 80vw card: (100vw - 80vw) / 2 = 10vw */
+    gap: 12px;
+    /* Reduced gap for mobile */
+  }
+}
+
 .works-grid::-webkit-scrollbar {
   display: none;
   /* Chrome/Safari */
@@ -299,15 +335,13 @@ button {
 .work-card {
   position: relative;
   border-radius: 6px;
-  /* 6px radius */
   overflow: hidden;
   cursor: pointer;
   width: 600px;
   height: 743px;
   flex-shrink: 0;
   transition: transform 0.3s ease;
-  background-color: var(--surface-color);
-  /* Fallback */
+  background-color: #F5F5F0;
   display: flex;
   flex-direction: column;
 }
@@ -320,6 +354,8 @@ button {
   display: flex;
   flex-direction: column;
   height: 100%;
+  flex: 1;
+  /* Ensure it fills the parent work-card */
   color: var(--text-color);
   /* Changed to text color as background is light */
 }
@@ -406,25 +442,37 @@ button {
   transform: scale(1.02);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .work-card {
-    width: 85vw;
+    width: 80vw;
+    /* Reduced from 85vw to allow peek */
     height: auto;
     min-height: 500px;
+    scroll-snap-align: center;
   }
 
   .work-image {
     width: 100%;
-    height: auto;
-    aspect-ratio: 450/258;
+    height: 100%;
+    /* Fill the container */
+    object-fit: cover;
+    /* Cover the area, cropping if necessary */
+    aspect-ratio: unset;
+    /* Remove aspect ratio constraint */
   }
 
   .work-header {
     padding: 1rem 1rem 0 1rem;
+    flex: 0 0 auto;
+    /* Let header take natural height */
   }
 
   .work-image-container {
-    padding: 1rem;
+    padding: 8px;
+    /* Reduced padding */
+    flex: 1 0 auto;
+    /* Fill remaining space */
+    /* height removed to allow flex to handle it */
   }
 }
 

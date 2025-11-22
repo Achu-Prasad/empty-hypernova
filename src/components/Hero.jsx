@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import gsap from 'gsap';
+import { useCursor } from '../context/CursorContext';
 
 const worksData = [
     {
@@ -17,7 +18,7 @@ const worksData = [
         subtitle: 'Product Design',
         tags: ['Fintech', 'Data Viz'],
         image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000&auto=format&fit=crop',
-        backgroundColor: '#F0EFEA',
+        backgroundColor: '#EBEBE6',
     },
     {
         id: 3,
@@ -25,7 +26,7 @@ const worksData = [
         subtitle: 'Mobile App',
         tags: ['iOS', 'Prototyping'],
         image: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=1000&auto=format&fit=crop',
-        backgroundColor: '#E6E8EB',
+        backgroundColor: '#EBEBE6',
     },
     {
         id: 4,
@@ -33,7 +34,7 @@ const worksData = [
         subtitle: 'Branding',
         tags: ['Identity', 'Strategy'],
         image: 'https://images.unsplash.com/photo-1600607686527-6fb886090705?q=80&w=1000&auto=format&fit=crop',
-        backgroundColor: '#F2EBE9',
+        backgroundColor: '#EBEBE6',
     },
     {
         id: 5,
@@ -41,7 +42,7 @@ const worksData = [
         subtitle: 'Mobile App',
         tags: ['Android', 'User Testing'],
         image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=1000&auto=format&fit=crop',
-        backgroundColor: '#E8F1F2',
+        backgroundColor: '#EBEBE6',
     },
     {
         id: 6,
@@ -49,7 +50,7 @@ const worksData = [
         subtitle: 'Photography',
         tags: ['Art Direction', 'Editorial'],
         image: 'https://images.unsplash.com/photo-1511818966892-d7d671e672a2?q=80&w=1000&auto=format&fit=crop',
-        backgroundColor: '#F5F5F5',
+        backgroundColor: '#EBEBE6',
     },
     {
         id: 7,
@@ -57,7 +58,7 @@ const worksData = [
         subtitle: 'Web Design',
         tags: ['SaaS', 'Conversion'],
         image: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1000&auto=format&fit=crop',
-        backgroundColor: '#E0E7FF',
+        backgroundColor: '#EBEBE6',
     },
 ];
 
@@ -65,6 +66,7 @@ const worksData = [
 const works = [...worksData, ...worksData, ...worksData];
 
 const Hero = () => {
+    const { setCursorType } = useCursor();
     const [hoveredWork, setHoveredWork] = useState(null);
     const scrollRef = useRef(null);
     const isHovering = useRef(false);
@@ -115,8 +117,14 @@ const Hero = () => {
         const container = scrollRef.current;
         if (!container) return;
 
-        const cardWidth = 600;
-        const gap = 24; // 1.5rem = 24px
+        // Dynamic calculation for responsiveness
+        const firstCard = container.querySelector('.work-card');
+        const cardWidth = firstCard ? firstCard.offsetWidth : 600;
+
+        // Get dynamic gap from CSS
+        const gapStyle = window.getComputedStyle(container).gap;
+        const gap = gapStyle ? parseFloat(gapStyle) : 24;
+
         const step = cardWidth + gap;
 
         const currentScroll = container.scrollLeft;
@@ -212,6 +220,8 @@ const Hero = () => {
                         style={{ backgroundColor: work.backgroundColor }}
                         onHoverStart={() => setHoveredWork(work.id)}
                         onHoverEnd={() => setHoveredWork(null)}
+                        onMouseEnter={() => setCursorType('card-hover')}
+                        onMouseLeave={() => setCursorType('default')}
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.5, delay: index * 0.05 }}

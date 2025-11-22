@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import profileImg from '../assets/profile.png';
+import { useCursor } from '../context/CursorContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -15,6 +16,7 @@ const navItems = [
 const Navbar = () => {
     const [time, setTime] = useState(new Date());
     const navRef = useRef(null);
+    const { setCursorType } = useCursor();
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -69,28 +71,22 @@ const Navbar = () => {
                             <span className="profile-name">Achu Prasad</span>
                         </div>
                     </div>
+                </div>
 
+                <div className="nav-right">
                     <div className="nav-links">
                         {navItems.map((item) => (
                             <a
                                 key={item.id}
                                 href={`#${item.id}`}
                                 className="nav-link"
+                                onMouseEnter={() => setCursorType('link-hover')}
+                                onMouseLeave={() => setCursorType('default')}
                             >
                                 {item.label}
                             </a>
                         ))}
                     </div>
-                </div>
-
-                <div className="nav-right">
-                    <div className="nav-info">
-                        <span className="nav-time">{formatTime(time)}</span>
-                        <span className="nav-location">India</span>
-                    </div>
-                    <button className="nav-cta">
-                        Contact
-                    </button>
                 </div>
             </motion.nav>
         </div>

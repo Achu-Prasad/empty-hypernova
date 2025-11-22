@@ -3,15 +3,21 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Experience from './components/Experience';
 
+import { CursorProvider } from './context/CursorContext';
+import CustomCursor from './components/CustomCursor';
+
 function App() {
   return (
-    <div className="app">
-      <Navbar />
-      <main>
-        <Hero />
-        <Experience />
-      </main>
-    </div>
+    <CursorProvider>
+      <CustomCursor />
+      <div className="app">
+        <Navbar />
+        <main>
+          <Hero />
+          <Experience />
+        </main>
+      </div>
+    </CursorProvider>
   );
 }
 
