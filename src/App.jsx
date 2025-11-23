@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
+import Perspective from './components/Perspective';
 import Experience from './components/Experience';
 
 import { CursorProvider } from './context/CursorContext';
@@ -14,6 +15,7 @@ function App() {
         <Navbar />
         <main>
           <Hero />
+          <Perspective />
           <Experience />
         </main>
       </div>

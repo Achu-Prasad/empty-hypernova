@@ -2,7 +2,7 @@
 
 :root {
   /* Light Theme with Vibegreen Accent - WCAG 2.2 Compliant */
-  --bg-color: #F5F5F0;
+  --bg-color: #fefefe;
   --text-color: #2D2D2D;
   --accent-green: #8F9E8B;
   --accent-grey: #A8A8A8;
@@ -235,62 +235,93 @@ button {
 @media (min-width: 1024px) {
   .hero-section {
     padding-top: 14rem;
-    /* Reduced spacing for better visual balance */
+    /* Restored to old spacing */
   }
 }
 
 .hero-header {
   margin-bottom: 3rem;
-  /* Mobile/Tablet: Show ~60% of cards */
   text-align: left;
 }
 
 @media (min-width: 1024px) {
   .hero-header {
     margin-bottom: calc(100vh - 500px);
-    /* Desktop: Show only ~5% peek of cards */
+    /* Restored to old spacing */
+  }
+}
+
+/* Perspective Section */
+.perspective-section {
+  padding: 8rem 0;
+  background-color: var(--bg-color);
+}
+
+.perspective-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.perspective-text {
+  font-size: 1.25rem;
+  /* Smaller size for mobile to prevent overflow */
+  font-weight: 400;
+  line-height: 1.5;
+  margin: 0;
+  max-width: 1000px;
+  text-align: left;
+  color: var(--text-color);
+  /* Base color, opacity handled inline */
+}
+
+/* Fallback for browsers that don't support background-clip */
+@supports not (background-clip: text) {
+  .perspective-text {
+    background: none;
+    color: var(--text-color);
+  }
+}
+
+@media (min-width: 768px) {
+  .perspective-text {
+    font-size: 2rem;
+    /* H2 size for tablet */
+  }
+}
+
+@media (min-width: 1024px) {
+  .perspective-text {
+    font-size: 2.25rem;
+    /* H2 size for desktop */
   }
 }
 
 .hero-custom-margin {
-  margin: 0 20px !important;
-  max-width: none !important;
-  width: auto !important;
-  /* 
-     Dynamic padding to align with centered navbar (max-width: 1400px, padding: 2rem/32px)
-     Formula: (50vw - 700px) + 32px - 20px = 50vw - 688px
-     Min padding: 32px - 20px = 12px
-  */
-  padding-left: max(12px, calc(50% - 688px)) !important;
-  padding-right: max(12px, calc(50% - 688px)) !important;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  /* Matches Navbar padding */
 }
 
 @media (max-width: 768px) {
   .hero-custom-margin {
-    /* On mobile, formula defaults to 12px. 
-       Navbar is 32px padding. Hero margin 20px. 
-       Total Hero = 20 + 12 = 32px. Matches Navbar.
-    */
-    padding-left: 12px !important;
-    padding-right: 12px !important;
+    padding: 0 1.5rem;
+    /* Matches mobile navbar padding if different, usually 1.5rem or 2rem */
   }
-}
-
-.subtitle {
-  color: var(--accent-grey);
-  margin-bottom: 1rem;
-  display: block;
 }
 
 .hero-title {
   font-size: 36px;
-  /* Fixed 36px as requested */
+  /* Reverted to old size */
+  line-height: 1.2;
+  margin-top: 0.5rem;
 }
 
 @media (min-width: 768px) {
   .hero-title {
     font-size: 36px;
-    /* Keeping it 36px on larger screens too as requested, or should it scale? Request said "decrease... into 36 pixel". I'll stick to 36px. */
   }
 }
 
@@ -504,33 +535,222 @@ button {
   margin-bottom: 0.5rem;
 }
 
-@media (min-width: 768px) {
-  .experience-header {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: baseline;
+/* Work Process Section */
+.work-process-section {
+  padding: 8rem 0;
+  background-color: var(--bg-color);
+  position: relative;
+  margin-bottom: 2rem;
+  /* space before next section */
+}
+
+/* Mobile adjustments */
+@media (max-width: 1024px) {
+  .work-process-section {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    margin-bottom: 1rem;
   }
 }
 
-.experience-role {
-  font-size: 1.5rem;
+.work-process-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4rem;
+}
+
+/* Left Side - Pinned Content */
+.process-left {
+  height: fit-content;
+  z-index: 10;
+  /* Mobile: Sticky at top with background */
+  position: sticky;
+  top: 100px;
+  /* Below navbar */
+  background-color: var(--bg-color);
+  padding: 1.5rem 0;
+  margin-bottom: 2rem;
+}
+
+.process-left-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.mono-label {
+  font-family: 'Space Mono', monospace;
+  color: var(--accent-blue);
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+}
+
+.process-heading {
+  font-size: 2.5rem;
+  /* Reduced to H3 size */
   font-weight: 500;
-}
-
-.experience-period {
-  color: var(--accent-grey);
-}
-
-.experience-company {
-  font-size: 1.125rem;
-  color: var(--accent-green);
-  margin-bottom: 1rem;
-  font-family: var(--font-heading);
-  font-style: italic;
-}
-
-.experience-description {
-  max-width: 60ch;
+  margin: 0;
   color: var(--text-color);
-  opacity: 0.8;
+}
+
+.process-indicator {
+  font-family: 'Space Mono', monospace;
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.current-step {
+  color: var(--accent-blue);
+}
+
+.active-step-details {
+  margin-top: 2rem;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInMove 0.5s forwards;
+}
+
+@keyframes fadeInMove {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.active-step-title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--text-color);
+}
+
+.active-step-desc {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  max-width: 400px;
+}
+
+/* Right Side - Scrolling Cards */
+.process-right {
+  display: flex;
+  flex-direction: column;
+  gap: 8rem;
+  /* Space between steps */
+  padding-bottom: 20vh;
+  padding-top: 2rem;
+  /* Align with left side text visually */
+}
+
+.process-step-wrapper {
+  display: flex;
+  flex-direction: column;
+  /* Stack video and text */
+  gap: 1.5rem;
+  opacity: 0.3;
+  transition: opacity 0.3s ease;
+  width: 100%;
+}
+
+.process-step-wrapper:has(.process-card.active) {
+  opacity: 1;
+}
+
+.process-card {
+  background-color: #1A1A1A;
+  border-radius: 4px;
+  width: 100%;
+  /* Fill container */
+  aspect-ratio: 16/9;
+  max-height: 400px;
+  /* Increased max-height for better scaling */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+  position: relative;
+}
+
+.process-card.active {
+  border-color: var(--accent-blue);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.card-video-placeholder {
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, #2a2a2a 0%, #1a1a1a 100%);
+}
+
+.process-step-details {
+  max-width: 500px;
+  width: 100%;
+}
+
+.step-title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--text-color);
+}
+
+.step-description {
+  font-family: 'Space Mono', monospace;
+  /* Mono typography */
+  font-size: 14px;
+  /* Small size */
+  line-height: 1.6;
+  color: var(--text-muted);
+  width: 100%;
+  /* Fill container */
+  max-width: none;
+  /* Remove width limit */
+}
+
+/* Desktop Layout */
+@media (min-width: 1024px) {
+  .work-process-container {
+    grid-template-columns: 1fr 1fr;
+    /* Equal width columns */
+    gap: 4rem;
+    /* Reduced gap for better balance */
+    align-items: start;
+  }
+
+  .process-left {
+    position: sticky;
+    top: 150px;
+    /* Adjusted sticky position for desktop */
+    height: auto;
+    padding: 0;
+    /* Remove mobile padding */
+    margin-bottom: 2rem;
+    /* Prevent overlap with next section */
+  }
+
+  .process-heading {
+    font-size: 3rem;
+    /* H3 size for desktop */
+  }
+
+  .process-step-wrapper {
+    flex-direction: column;
+    /* Ensure column layout on desktop too */
+    align-items: flex-start;
+    /* Align text to left of card */
+    gap: 1.5rem;
+  }
+
+  .process-card {
+    width: 100%;
+    /* Full width */
+    /* Full width of the column */
+    max-width: none;
+    /* Remove max-width */
+    height: auto;
+    aspect-ratio: 16/9;
+  }
 }

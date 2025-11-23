@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useCursor } from '../context/CursorContext';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const worksData = [
     {
@@ -64,6 +67,53 @@ const worksData = [
 
 // Duplicate for infinite scroll (3 sets to ensure smooth looping)
 const works = [...worksData, ...worksData, ...worksData];
+
+const RandomReveal = ({ text, className }) => {
+    const [displayText, setDisplayText] = useState('');
+    const [isRevealed, setIsRevealed] = useState(false);
+    const intervalRef = useRef(null);
+    const symbols = '-'; // Use only dashes as requested
+
+    useEffect(() => {
+        // Initial state: First letter + dashes
+        const initial = text[0] + text.slice(1).split('').map(() => symbols).join('');
+        setDisplayText(initial);
+    }, [text, symbols]);
+
+    const handleMouseEnter = () => {
+        if (isRevealed) return;
+
+        let iteration = 0;
+        clearInterval(intervalRef.current);
+
+        intervalRef.current = setInterval(() => {
+            setDisplayText(prev =>
+                text.split('').map((letter, index) => {
+                    if (index < iteration) {
+                        return text[index];
+                    }
+                    return symbols[Math.floor(Math.random() * symbols.length)];
+                }).join('')
+            );
+
+            if (iteration >= text.length) {
+                clearInterval(intervalRef.current);
+                setIsRevealed(true);
+            }
+
+            iteration += 1 / 3;
+        }, 30);
+    };
+
+    return (
+        <span className={className} onMouseEnter={handleMouseEnter} style={{ position: 'relative', display: 'inline-block', whiteSpace: 'nowrap' }}>
+            {/* Invisible text to set the correct width */}
+            <span style={{ visibility: 'hidden' }}>{text}</span>
+            {/* Animated text overlay */}
+            <span style={{ position: 'absolute', left: 0, top: 0, whiteSpace: 'nowrap' }}>{displayText}</span>
+        </span>
+    );
+};
 
 const Hero = () => {
     const { setCursorType } = useCursor();
@@ -183,7 +233,7 @@ const Hero = () => {
                     <span className="mono subtitle">Portfolio 2025</span>
                     <h1 className="hero-title">
                         Designing with <br />
-                        <span className="highlight">purpose</span> & personality.
+                        <RandomReveal text="purpose" className="highlight" /> & <RandomReveal text="personality." className="" />
                     </h1>
                 </motion.div>
             </div>
