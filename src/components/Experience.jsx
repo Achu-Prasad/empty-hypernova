@@ -46,26 +46,34 @@ const Experience = () => {
 
     useEffect(() => {
         const ctx = gsap.context(() => {
-            // Pin the left side
-            ScrollTrigger.create({
-                trigger: containerRef.current,
-                start: 'top top',
-                end: 'bottom bottom',
-                pin: leftRef.current,
-                pinSpacing: false, // We handle spacing via flex/grid
+            ScrollTrigger.matchMedia({
+                // Desktop: Pin the left side
+                "(min-width: 1024px)": function () {
+                    ScrollTrigger.create({
+                        trigger: containerRef.current,
+                        start: 'top top',
+                        end: 'bottom bottom',
+                        pin: leftRef.current,
+                        pinSpacing: false,
+                    });
+                },
+                // Mobile: No GSAP pinning, rely on CSS sticky
             });
 
-            // Update active step based on scroll position of right cards
-            const cards = rightRef.current.querySelectorAll('.process-card');
-            cards.forEach((card, index) => {
+            // Card Triggers
+            const steps = rightRef.current.querySelectorAll('.process-step-wrapper');
+            steps.forEach((step, index) => {
                 ScrollTrigger.create({
-                    trigger: card,
-                    start: 'top center',
-                    end: 'bottom center',
+                    trigger: step,
+                    start: 'top center+=10%', // Trigger when top of wrapper hits slightly below center
+                    end: 'bottom center+=10%',
                     onEnter: () => setActiveStep(index),
                     onEnterBack: () => setActiveStep(index),
                 });
             });
+
+            // Force refresh after a short delay to ensure layout is settled
+            setTimeout(() => ScrollTrigger.refresh(), 100);
         }, containerRef);
 
         return () => ctx.revert();

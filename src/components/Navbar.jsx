@@ -44,7 +44,13 @@ const Navbar = () => {
             start: "top top",
             end: 99999,
             onUpdate: (self) => {
-                self.direction === -1 ? showAnim.play() : showAnim.reverse();
+                if (self.direction === -1) {
+                    showAnim.play();
+                    document.body.classList.remove('nav-hidden');
+                } else {
+                    showAnim.reverse();
+                    document.body.classList.add('nav-hidden');
+                }
             }
         });
 

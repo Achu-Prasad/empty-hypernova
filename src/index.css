@@ -118,11 +118,23 @@ button {
   padding: 0 2rem;
 }
 
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0 1rem;
+  }
+}
+
 .nav-left,
 .nav-right {
   display: flex;
   align-items: center;
   gap: 3rem;
+}
+
+@media (max-width: 768px) {
+  .nav-left {
+    gap: 1rem;
+  }
 }
 
 .nav-profile {
@@ -562,20 +574,45 @@ button {
 /* Left Side - Pinned Content */
 .process-left {
   height: fit-content;
-  z-index: 10;
+  z-index: 20;
   /* Mobile: Sticky at top with background */
   position: sticky;
-  top: 100px;
-  /* Below navbar */
+  top: 90px;
+  /* Below navbar (~88px height) */
   background-color: var(--bg-color);
   padding: 1.5rem 0;
   margin-bottom: 2rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  /* Optional: adds separation */
+  transition: top 0.3s ease;
+}
+
+body.nav-hidden .process-left {
+  top: 0;
+}
+
+@media (max-width: 768px) {
+  .process-left {
+    margin-left: -2rem;
+    margin-right: -2rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    width: calc(100% + 4rem);
+  }
 }
 
 .process-left-content {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  padding: 0 0.5rem;
+  /* Add slight horizontal padding for balance */
+}
+
+@media (max-width: 768px) {
+  .process-left-content {
+    gap: 0.75rem;
+  }
 }
 
 .mono-label {
@@ -586,11 +623,17 @@ button {
 }
 
 .process-heading {
-  font-size: 2.5rem;
+  font-size: 2rem;
   /* Reduced to H3 size */
   font-weight: 500;
   margin: 0;
   color: var(--text-color);
+}
+
+@media (max-width: 768px) {
+  .process-heading {
+    font-size: 1.75rem;
+  }
 }
 
 .process-indicator {
