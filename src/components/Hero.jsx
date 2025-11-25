@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -237,6 +239,61 @@ const Hero = () => {
                     </h1>
                 </motion.div>
             </div>
+
+            <div className="container hero-custom-margin works-section-header">
+                <span className="recent-works-text">Recent works</span>
+                <div className="works-nav-buttons">
+                    <button
+                        className="works-nav-btn"
+                        onClick={() => {
+                            const container = scrollRef.current;
+                            if (container) {
+                                onUserInteractionStart(); // Stop auto-scroll first
+
+                                const gapStyle = window.getComputedStyle(container).gap;
+                                const gap = gapStyle ? parseFloat(gapStyle) : 24;
+                                const cardWidth = container.querySelector('.work-card')?.offsetWidth || 600;
+                                const step = cardWidth + gap;
+
+                                gsap.to(container, {
+                                    scrollLeft: container.scrollLeft - step,
+                                    duration: 0.5,
+                                    ease: "power2.out",
+                                    onComplete: () => onUserInteractionEnd() // Resume after animation
+                                });
+                            }
+                        }}
+                        aria-label="Scroll left"
+                    >
+                        <ArrowLeft size={16} />
+                    </button>
+                    <button
+                        className="works-nav-btn"
+                        onClick={() => {
+                            const container = scrollRef.current;
+                            if (container) {
+                                onUserInteractionStart(); // Stop auto-scroll first
+
+                                const gapStyle = window.getComputedStyle(container).gap;
+                                const gap = gapStyle ? parseFloat(gapStyle) : 24;
+                                const cardWidth = container.querySelector('.work-card')?.offsetWidth || 600;
+                                const step = cardWidth + gap;
+
+                                gsap.to(container, {
+                                    scrollLeft: container.scrollLeft + step,
+                                    duration: 0.5,
+                                    ease: "power2.out",
+                                    onComplete: () => onUserInteractionEnd() // Resume after animation
+                                });
+                            }
+                        }}
+                        aria-label="Scroll right"
+                    >
+                        <ArrowRight size={16} />
+                    </button>
+                </div>
+            </div>
+
             <div
                 className="works-grid"
                 ref={scrollRef}
@@ -264,40 +321,45 @@ const Hero = () => {
                 }}
             >
                 {works.map((work, index) => (
-                    <motion.div
+                    <Link
                         key={`${work.id}-${index}`}
-                        className="work-card"
-                        style={{ backgroundColor: work.backgroundColor }}
-                        onHoverStart={() => setHoveredWork(work.id)}
-                        onHoverEnd={() => setHoveredWork(null)}
-                        onMouseEnter={() => setCursorType('card-hover')}
-                        onMouseLeave={() => setCursorType('default')}
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.5, delay: index * 0.05 }}
+                        to={`/case-study/${work.id}`}
+                        style={{ textDecoration: 'none', color: 'inherit' }}
                     >
-                        <div className="work-content">
-                            <div className="work-header">
-                                <h3 className="work-title">{work.title}</h3>
-                                <div className="work-meta">
-                                    <span className="work-subtitle">{work.subtitle}</span>
-                                    <div className="work-tags">
-                                        {work.tags.map((tag, idx) => (
-                                            <span key={idx} className="work-tag">{tag}</span>
-                                        ))}
+                        <motion.div
+                            className="work-card"
+                            style={{ backgroundColor: work.backgroundColor }}
+                            onHoverStart={() => setHoveredWork(work.id)}
+                            onHoverEnd={() => setHoveredWork(null)}
+                            onMouseEnter={() => setCursorType('card-hover')}
+                            onMouseLeave={() => setCursorType('default')}
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.5, delay: index * 0.05 }}
+                        >
+                            <div className="work-content">
+                                <div className="work-header">
+                                    <h3 className="work-title">{work.title}</h3>
+                                    <div className="work-meta">
+                                        <span className="work-subtitle">{work.subtitle}</span>
+                                        <div className="work-tags">
+                                            {work.tags.map((tag, idx) => (
+                                                <span key={idx} className="work-tag">{tag}</span>
+                                            ))}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div className="work-image-container">
-                                <img
-                                    src={work.image}
-                                    alt={work.title}
-                                    className="work-image"
-                                />
+                                <div className="work-image-container">
+                                    <img
+                                        src={work.image}
+                                        alt={work.title}
+                                        className="work-image"
+                                    />
+                                </div>
                             </div>
-                        </div>
-                    </motion.div>
+                        </motion.div>
+                    </Link>
                 ))}
             </div>
         </section>

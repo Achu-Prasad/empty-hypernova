@@ -97,6 +97,7 @@ button {
 }
 
 /* Navbar Styles */
+/* Navbar Styles */
 .navbar-container {
   position: fixed;
   top: 0;
@@ -105,6 +106,10 @@ button {
   z-index: 50;
   padding: 1.5rem 0;
   padding-right: var(--scrollbar-width, 0px);
+  background-color: var(--bg-color);
+  /* Added solid background */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  /* Added subtle border */
 }
 
 .navbar {
@@ -167,7 +172,6 @@ button {
   font-family: var(--font-heading);
   font-weight: 500;
   font-size: var(--font-sm);
-  /* Adjusted to match request for small sizes generally, or keep slightly larger? Request said "all other text has the size of 14 px". Let's stick to 14px for standard text. */
 }
 
 .nav-links {
@@ -201,24 +205,14 @@ button {
 
 .nav-cta {
   font-family: var(--font-mono);
-  /* Mono font requested */
   font-size: var(--font-sm);
-  /* 14px */
   font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   padding: 0.5rem 1.25rem;
   border: 1px solid var(--text-color);
   border-radius: 4px;
-  /* 4px radius */
   transition: all 0.2s ease;
-}
-
-.glass-effect {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .nav-cta:hover {
@@ -234,6 +228,11 @@ button {
   }
 }
 
+.glass-effect {
+  /* Removed glass effect */
+  background-color: var(--bg-color);
+}
+
 /* Hero Styles */
 .hero-section {
   min-height: 100vh;
@@ -247,7 +246,6 @@ button {
 @media (min-width: 1024px) {
   .hero-section {
     padding-top: 14rem;
-    /* Restored to old spacing */
   }
 }
 
@@ -259,7 +257,6 @@ button {
 @media (min-width: 1024px) {
   .hero-header {
     margin-bottom: calc(100vh - 500px);
-    /* Restored to old spacing */
   }
 }
 
@@ -277,17 +274,14 @@ button {
 
 .perspective-text {
   font-size: 1.25rem;
-  /* Smaller size for mobile to prevent overflow */
   font-weight: 400;
   line-height: 1.5;
   margin: 0;
   max-width: 1000px;
   text-align: left;
   color: var(--text-color);
-  /* Base color, opacity handled inline */
 }
 
-/* Fallback for browsers that don't support background-clip */
 @supports not (background-clip: text) {
   .perspective-text {
     background: none;
@@ -298,14 +292,12 @@ button {
 @media (min-width: 768px) {
   .perspective-text {
     font-size: 2rem;
-    /* H2 size for tablet */
   }
 }
 
 @media (min-width: 1024px) {
   .perspective-text {
     font-size: 2.25rem;
-    /* H2 size for desktop */
   }
 }
 
@@ -314,19 +306,16 @@ button {
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 2rem;
-  /* Matches Navbar padding */
 }
 
 @media (max-width: 768px) {
   .hero-custom-margin {
     padding: 0 1.5rem;
-    /* Matches mobile navbar padding if different, usually 1.5rem or 2rem */
   }
 }
 
 .hero-title {
   font-size: 36px;
-  /* Reverted to old size */
   line-height: 1.2;
   margin-top: 0.5rem;
 }
@@ -353,26 +342,20 @@ button {
   gap: 1.5rem;
   margin-top: 2rem;
   padding-bottom: 2rem;
-  /* Space for scrollbar */
   scrollbar-width: none;
-  /* Firefox */
   -ms-overflow-style: none;
-  /* IE/Edge */
 }
 
 @media (max-width: 767px) {
   .works-grid {
     scroll-snap-type: x mandatory;
     padding-inline: 10vw;
-    /* Center the 80vw card: (100vw - 80vw) / 2 = 10vw */
     gap: 12px;
-    /* Reduced gap for mobile */
   }
 }
 
 .works-grid::-webkit-scrollbar {
   display: none;
-  /* Chrome/Safari */
 }
 
 .work-card {
@@ -389,8 +372,6 @@ button {
   flex-direction: column;
 }
 
-/* Removed work-card-bg as we are moving to a solid card with image inside */
-
 .work-content {
   position: relative;
   z-index: 10;
@@ -398,9 +379,7 @@ button {
   flex-direction: column;
   height: 100%;
   flex: 1;
-  /* Ensure it fills the parent work-card */
   color: var(--text-color);
-  /* Changed to text color as background is light */
 }
 
 .work-header {
@@ -425,9 +404,7 @@ button {
 
 .work-title {
   font-size: var(--font-sm);
-  /* Small: 14px */
   font-family: var(--font-mono);
-  /* Mono font */
   font-weight: 500;
   line-height: 1.1;
 }
@@ -435,7 +412,6 @@ button {
 .work-subtitle {
   font-family: var(--font-mono);
   font-size: var(--font-xs);
-  /* Extrasmall: 12px */
   text-transform: uppercase;
   opacity: 0.8;
   letter-spacing: 0.05em;
@@ -450,12 +426,10 @@ button {
 .work-tag {
   font-family: var(--font-mono);
   font-size: var(--font-xs);
-  /* Extrasmall: 12px */
   text-transform: uppercase;
   letter-spacing: 0.05em;
   padding: 0.25rem 0.75rem;
   border: 1px solid rgba(0, 0, 0, 0.1);
-  /* Darker border for light bg */
   border-radius: 4px;
   background-color: transparent;
   color: var(--text-color);
@@ -476,7 +450,6 @@ button {
   height: 258px;
   object-fit: cover;
   border-radius: 4px;
-  /* Small radius for inner image too? */
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   transition: transform 0.5s ease;
 }
@@ -488,7 +461,6 @@ button {
 @media (max-width: 767px) {
   .work-card {
     width: 80vw;
-    /* Reduced from 85vw to allow peek */
     height: auto;
     min-height: 500px;
     scroll-snap-align: center;
@@ -497,25 +469,18 @@ button {
   .work-image {
     width: 100%;
     height: 100%;
-    /* Fill the container */
     object-fit: cover;
-    /* Cover the area, cropping if necessary */
     aspect-ratio: unset;
-    /* Remove aspect ratio constraint */
   }
 
   .work-header {
     padding: 1rem 1rem 0 1rem;
     flex: 0 0 auto;
-    /* Let header take natural height */
   }
 
   .work-image-container {
     padding: 8px;
-    /* Reduced padding */
     flex: 1 0 auto;
-    /* Fill remaining space */
-    /* height removed to allow flex to handle it */
   }
 }
 
@@ -553,10 +518,8 @@ button {
   background-color: var(--bg-color);
   position: relative;
   margin-bottom: 2rem;
-  /* space before next section */
 }
 
-/* Mobile adjustments */
 @media (max-width: 1024px) {
   .work-process-section {
     padding-top: 4rem;
@@ -571,19 +534,15 @@ button {
   gap: 4rem;
 }
 
-/* Left Side - Pinned Content */
 .process-left {
   height: fit-content;
   z-index: 20;
-  /* Mobile: Sticky at top with background */
   position: sticky;
   top: 90px;
-  /* Below navbar (~88px height) */
   background-color: var(--bg-color);
   padding: 1.5rem 0;
   margin-bottom: 2rem;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  /* Optional: adds separation */
   transition: top 0.3s ease;
 }
 
@@ -606,7 +565,6 @@ body.nav-hidden .process-left {
   flex-direction: column;
   gap: 1.5rem;
   padding: 0 0.5rem;
-  /* Add slight horizontal padding for balance */
 }
 
 @media (max-width: 768px) {
@@ -617,14 +575,13 @@ body.nav-hidden .process-left {
 
 .mono-label {
   font-family: 'Space Mono', monospace;
-  color: var(--accent-blue);
+  color: var(--accent-green);
   font-size: 0.875rem;
   letter-spacing: 0.05em;
 }
 
 .process-heading {
   font-size: 2rem;
-  /* Reduced to H3 size */
   font-weight: 500;
   margin: 0;
   color: var(--text-color);
@@ -639,7 +596,7 @@ body.nav-hidden .process-left {
 .process-indicator {
   font-family: 'Space Mono', monospace;
   font-size: 1rem;
-  color: var(--text-muted);
+  color: var(--accent-grey);
   margin-top: 1rem;
   display: flex;
   align-items: center;
@@ -647,7 +604,7 @@ body.nav-hidden .process-left {
 }
 
 .current-step {
-  color: var(--accent-blue);
+  color: var(--accent-green);
 }
 
 .active-step-details {
@@ -673,25 +630,21 @@ body.nav-hidden .process-left {
 .active-step-desc {
   font-size: 1rem;
   line-height: 1.6;
-  color: var(--text-muted);
+  color: var(--accent-grey);
   max-width: 400px;
 }
 
-/* Right Side - Scrolling Cards */
 .process-right {
   display: flex;
   flex-direction: column;
   gap: 8rem;
-  /* Space between steps */
   padding-bottom: 20vh;
   padding-top: 2rem;
-  /* Align with left side text visually */
 }
 
 .process-step-wrapper {
   display: flex;
   flex-direction: column;
-  /* Stack video and text */
   gap: 1.5rem;
   opacity: 0.3;
   transition: opacity 0.3s ease;
@@ -706,10 +659,8 @@ body.nav-hidden .process-left {
   background-color: #1A1A1A;
   border-radius: 4px;
   width: 100%;
-  /* Fill container */
   aspect-ratio: 16/9;
   max-height: 400px;
-  /* Increased max-height for better scaling */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -719,7 +670,7 @@ body.nav-hidden .process-left {
 }
 
 .process-card.active {
-  border-color: var(--accent-blue);
+  border-color: var(--accent-green);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
 }
 
@@ -742,58 +693,288 @@ body.nav-hidden .process-left {
 
 .step-description {
   font-family: 'Space Mono', monospace;
-  /* Mono typography */
   font-size: 14px;
-  /* Small size */
   line-height: 1.6;
-  color: var(--text-muted);
+  color: var(--accent-grey);
   width: 100%;
-  /* Fill container */
   max-width: none;
-  /* Remove width limit */
 }
 
-/* Desktop Layout */
 @media (min-width: 1024px) {
   .work-process-container {
     grid-template-columns: 1fr 1fr;
-    /* Equal width columns */
     gap: 4rem;
-    /* Reduced gap for better balance */
     align-items: start;
   }
 
   .process-left {
     position: sticky;
     top: 150px;
-    /* Adjusted sticky position for desktop */
     height: auto;
     padding: 0;
-    /* Remove mobile padding */
     margin-bottom: 2rem;
-    /* Prevent overlap with next section */
   }
 
   .process-heading {
     font-size: 3rem;
-    /* H3 size for desktop */
   }
 
   .process-step-wrapper {
     flex-direction: column;
-    /* Ensure column layout on desktop too */
     align-items: flex-start;
-    /* Align text to left of card */
     gap: 1.5rem;
   }
 
   .process-card {
     width: 100%;
-    /* Full width */
-    /* Full width of the column */
     max-width: none;
-    /* Remove max-width */
     height: auto;
     aspect-ratio: 16/9;
+  }
+}
+
+/* Works Section Header */
+.works-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 1rem;
+  padding-right: 2rem;
+  /* Match container padding */
+}
+
+.recent-works-text {
+  font-family: var(--font-mono);
+  font-size: var(--font-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-color);
+}
+
+.works-nav-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.works-nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.4);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.works-nav-btn:hover {
+  background-color: var(--text-color);
+  color: var(--bg-color);
+  border-color: var(--text-color);
+}
+
+@media (max-width: 1024px) {
+  .works-nav-buttons {
+    display: none;
+  }
+}
+
+/* Case Study Page Styles */
+.case-study-page {
+  min-height: 100vh;
+  background-color: var(--bg-color);
+  padding-top: 0;
+}
+
+.case-study-header {
+  position: sticky;
+  top: 88px;
+  /* Height of navbar */
+  left: 0;
+  right: 0;
+  z-index: 40;
+  background-color: var(--bg-color);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  transition: top 0.3s ease;
+  margin: 0;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+  width: 100%;
+}
+
+/* When navbar is hidden */
+body.nav-hidden .case-study-header {
+  top: 0;
+}
+
+.header-left,
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-body);
+  font-size: var(--font-sm);
+  color: var(--text-color);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.back-button:hover {
+  background-color: var(--surface-color);
+}
+
+.save-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-body);
+  font-size: var(--font-sm);
+  color: var(--bg-color);
+  background-color: var(--text-color);
+  border: 1px solid var(--text-color);
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.save-button:hover:not(:disabled) {
+  background-color: var(--accent-green);
+  border-color: var(--accent-green);
+}
+
+.save-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.last-saved {
+  font-family: var(--font-mono);
+  font-size: var(--font-xs);
+  color: var(--accent-grey);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.case-study-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+}
+
+.editor-wrapper {
+  background-color: white;
+  border-radius: 8px;
+  padding: 3rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  min-height: 80vh;
+}
+
+/* BlockNote Editor Customizations */
+.bn-container {
+  font-family: var(--font-body);
+}
+
+.bn-editor h1 {
+  font-family: var(--font-heading);
+  font-size: 2.5rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  color: var(--text-color);
+}
+
+.bn-editor h2 {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 500;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: var(--text-color);
+}
+
+.bn-editor h3 {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: var(--text-color);
+}
+
+.bn-editor p {
+  font-family: var(--font-body);
+  font-size: var(--font-base);
+  line-height: 1.7;
+  color: var(--text-color);
+  margin-bottom: 1rem;
+}
+
+.bn-editor img {
+  border-radius: 6px;
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem 0;
+}
+
+.bn-editor video {
+  border-radius: 6px;
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem 0;
+}
+
+@media (max-width: 768px) {
+  .case-study-page {
+    padding-top: 0;
+  }
+
+  .case-study-header {
+    top: 72px;
+    /* Mobile navbar height */
+    padding: 0.75rem 1rem;
+  }
+
+  body.nav-hidden .case-study-header {
+    top: 0;
+  }
+
+  .case-study-container {
+    padding: 2rem 1rem;
+  }
+
+  .editor-wrapper {
+    padding: 1.5rem;
+  }
+
+  .bn-editor h1 {
+    font-size: 2rem;
+  }
+
+  .bn-editor h2 {
+    font-size: 1.5rem;
+  }
+
+  .bn-editor h3 {
+    font-size: 1.25rem;
   }
 }
