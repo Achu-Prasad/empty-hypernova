@@ -461,10 +461,11 @@ button {
 @media (max-width: 767px) {
   .work-card {
     width: 80vw;
-    height: auto;
-    min-height: 500px;
+    height: 500px;
     scroll-snap-align: center;
   }
+
+
 
   .work-image {
     width: 100%;
@@ -480,7 +481,8 @@ button {
 
   .work-image-container {
     padding: 8px;
-    flex: 1 0 auto;
+    flex: 1;
+    align-items: stretch;
   }
 }
 

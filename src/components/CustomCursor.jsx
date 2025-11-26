@@ -229,8 +229,8 @@ const CustomCursor = () => {
                 duration: 0.2
             });
 
-            // Trail disabled for now
-            if (path) gsap.to(path, { opacity: 0, duration: 0.2 });
+            // Trail enabled
+            if (path) gsap.to(path, { opacity: 0.4, duration: 0.2 });
         }
     }, [cursorType, isMobile]);
 
