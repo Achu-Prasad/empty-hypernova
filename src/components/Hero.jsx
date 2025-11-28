@@ -256,7 +256,7 @@ const Hero = () => {
                                 const step = cardWidth + gap;
 
                                 gsap.to(container, {
-                                    scrollLeft: container.scrollLeft - step,
+                                    scrollLeft: container.scrollLeft + step,
                                     duration: 0.5,
                                     ease: "power2.out",
                                     onComplete: () => onUserInteractionEnd() // Resume after animation
@@ -280,7 +280,7 @@ const Hero = () => {
                                 const step = cardWidth + gap;
 
                                 gsap.to(container, {
-                                    scrollLeft: container.scrollLeft + step,
+                                    scrollLeft: container.scrollLeft - step,
                                     duration: 0.5,
                                     ease: "power2.out",
                                     onComplete: () => onUserInteractionEnd() // Resume after animation

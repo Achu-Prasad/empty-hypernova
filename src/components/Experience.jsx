@@ -47,17 +47,8 @@ const Experience = () => {
     useEffect(() => {
         const ctx = gsap.context(() => {
             ScrollTrigger.matchMedia({
-                // Desktop: Pin the left side
-                "(min-width: 1024px)": function () {
-                    ScrollTrigger.create({
-                        trigger: containerRef.current,
-                        start: 'top top',
-                        end: 'bottom bottom',
-                        pin: leftRef.current,
-                        pinSpacing: false,
-                    });
-                },
-                // Mobile: No GSAP pinning, rely on CSS sticky
+                // Desktop & Mobile: No GSAP pinning, rely on CSS sticky
+                // We only use ScrollTrigger for the active step detection below
             });
 
             // Card Triggers

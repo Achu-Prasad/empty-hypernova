@@ -8,9 +8,9 @@ import { useCursor } from '../context/CursorContext';
 gsap.registerPlugin(ScrollTrigger);
 
 const navItems = [
-    { id: 'about', label: 'About Me' },
-    { id: 'works', label: 'My Works' },
-    { id: 'playground', label: 'Playground' },
+    { id: 'about', label: 'About' },
+    { id: 'works', label: 'Works' },
+    { id: 'playground', label: 'Playbook' },
 ];
 
 const Navbar = () => {
@@ -34,6 +34,7 @@ const Navbar = () => {
         updateScrollbarWidth();
         window.addEventListener('resize', updateScrollbarWidth);
 
+        /*
         const showAnim = gsap.from(navRef.current, {
             yPercent: -100,
             paused: true,
@@ -53,6 +54,7 @@ const Navbar = () => {
                 }
             }
         });
+        */
 
         return () => window.removeEventListener('resize', updateScrollbarWidth);
     }, []);
@@ -77,9 +79,6 @@ const Navbar = () => {
                             <span className="profile-name">Achu Prasad</span>
                         </div>
                     </div>
-                </div>
-
-                <div className="nav-right">
                     <div className="nav-links">
                         {navItems.map((item) => (
                             <a
@@ -92,6 +91,13 @@ const Navbar = () => {
                                 {item.label}
                             </a>
                         ))}
+                    </div>
+                </div>
+
+                <div className="nav-right">
+                    <div className="nav-info">
+                        <span className="nav-location">Bengaluru, IN</span>
+                        <span className="nav-time">{formatTime(time)}</span>
                     </div>
                 </div>
             </motion.nav>

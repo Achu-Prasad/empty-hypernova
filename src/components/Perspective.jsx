@@ -6,73 +6,40 @@ gsap.registerPlugin(ScrollTrigger);
 
 const Perspective = () => {
     const containerRef = useRef(null);
-    const textRef = useRef(null);
 
-    const text = "I'm a designer with a strong foundation in digital design, social media advertising, branding, and motion graphics. I'm currently expanding my skills in UI/UX to better understand how design shapes user experiences and solves real problems. My goal is to create meaningful, impactful designs and collaborate with people who value thoughtful, purposeful creativity.";
-
-    useEffect(() => {
-        const container = containerRef.current;
-        const chars = textRef.current.querySelectorAll('.char');
-
-        if (!container || chars.length === 0) return;
-
-        let ctx = gsap.context(() => {
-            ScrollTrigger.matchMedia({
-                // Desktop/Tablet animation (>= 768px)
-                "(min-width: 768px)": function () {
-                    // Set initial state for animation
-                    gsap.set(chars, { opacity: 0.3, color: "var(--text-color)" });
-
-                    const tl = gsap.timeline({
-                        scrollTrigger: {
-                            trigger: container,
-                            start: "center center",
-                            end: "+=200%",
-                            scrub: 1,
-                            pin: true,
-                            pinSpacing: true,
-                        }
-                    });
-
-                    tl.to(chars, {
-                        color: "#2D2D2D",
-                        opacity: 1,
-                        stagger: 0.05,
-                        ease: "none",
-                    });
-                },
-                // Mobile state (< 768px)
-                "(max-width: 767px)": function () {
-                    // No animation, just dark fill
-                    gsap.set(chars, { opacity: 1, color: "#2D2D2D" });
-                }
-            });
-        }, containerRef);
-
-        return () => ctx.revert();
-    }, []);
-
-    // Split text into words and then characters to preserve word wrapping
-    const renderText = () => {
-        return text.split(" ").map((word, wordIndex) => (
-            <span key={wordIndex} style={{ display: 'inline-block', whiteSpace: 'pre' }}>
-                {word.split("").map((char, charIndex) => (
-                    <span key={charIndex} className="char">
-                        {char}
-                    </span>
-                ))}
-                {/* Add space after word */}
-                <span className="char">&nbsp;</span>
-            </span>
-        ));
-    };
 
     return (
         <section className="perspective-section" ref={containerRef}>
             <div className="container perspective-container">
-                <h2 className="perspective-text" ref={textRef}>
-                    {renderText()}
-                </h2>
+                <div className="perspective-content">
+                    <h2 className="perspective-text">
+                        <span className="text-primary">I am passionate about creating products that users love. </span>
+                        <span className="text-secondary">At the same time, I strive to build an environment where product teams can do their best work.</span>
+                    </h2>
+
+                    <div className="expertise-section">
+                        <h4 className="expertise-label">core expertise</h4>
+                        <ul className="expertise-list">
+                            {[
+                                'Web Design',
+                                'Branding',
+                                'User Research',
+                                'UI Design'
+                            ].map((item, index) => (
+                                <li key={index} className="expertise-item">
+                                    <span className="expertise-title">{item}</span>
+                                    <div className="expertise-previews">
+                                        {[1, 2, 3, 4, 5, 6].map((i) => (
+                                            <div key={i} className="preview-item">
+                                                <div className="preview-placeholder"></div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
             </div>
         </section>
     );
