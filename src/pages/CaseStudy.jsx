@@ -1,20 +1,43 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useCreateBlockNote } from '@blocknote/react';
 import { BlockNoteView } from '@blocknote/mantine';
 import '@blocknote/mantine/style.css';
-import { ArrowLeft, Save, Upload } from 'lucide-react';
-import { uploadImage, saveCaseStudy, loadCaseStudy } from '../lib/supabase';
+import { ArrowLeft, Save } from 'lucide-react';
 import { useCursor } from '../context/CursorContext';
+import { useCMS } from '../context/CMSContext';
 
 const CaseStudy = () => {
+    // ===== ALL HOOKS MUST BE CALLED HERE AT THE TOP LEVEL =====
+    // Never call hooks conditionally or after early returns!
+
     const { id } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
     const { setCursorType } = useCursor();
+    const { getWork, updateWork, isAdmin } = useCMS();
+
     const [isSaving, setIsSaving] = useState(false);
     const [lastSaved, setLastSaved] = useState(null);
-    const [initialContent, setInitialContent] = useState(null);
+    const [content, setContent] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+
+    // Determine navigation paths and edit access
+    const backPath = location.state?.from === 'admin' ? '/admin' : '/';
+    const backLabel = location.state?.from === 'admin' ? 'Back to Dashboard' : 'Back to Portfolio';
+    const hasEditAccess = location.state?.from === 'admin' && isAdmin;
+
+    // Custom upload handler
+    const handleUpload = async (file) => {
+        const url = URL.createObjectURL(file);
+        return url;
+    };
+
+    // Initialize editor - ALWAYS called unconditionally
+    const editor = useCreateBlockNote({
+        uploadFile: handleUpload,
+        initialContent: content || undefined,
+    });
 
     // Reset cursor on mount
     useEffect(() => {
@@ -22,72 +45,29 @@ const CaseStudy = () => {
         return () => setCursorType('default');
     }, [setCursorType]);
 
-    // Default template content
-    const defaultContent = useMemo(() => [
-        {
-            type: 'heading',
-            content: 'New Case Study',
-        },
-        {
-            type: 'paragraph',
-            content: 'Start writing your case study here...',
-        }
-    ], []);
-
     // Load content on mount
     useEffect(() => {
         const loadContent = async () => {
             setIsLoading(true);
             try {
-                const result = await loadCaseStudy(id);
-                if (result.content && !result.error) {
-                    console.log('Loaded content:', result.content);
-                    setInitialContent(result.content);
-                    if (result.metadata?.lastModified) {
-                        setLastSaved(new Date(result.metadata.lastModified));
-                    }
+                const work = getWork(id);
+                if (work && work.content) {
+                    console.log('Loaded content:', work.content);
+                    setContent(work.content);
                 } else {
-                    console.log('No saved content found, using template');
-                    setInitialContent(defaultContent);
+                    console.log('No saved content found');
+                    setContent(undefined);
                 }
             } catch (error) {
                 console.error('Error loading content:', error);
-                setInitialContent(defaultContent);
+                setContent(undefined);
             } finally {
                 setIsLoading(false);
             }
         };
 
         loadContent();
-    }, [id, defaultContent]);
-
-    // Custom upload handler for images
-    const handleUpload = async (file) => {
-        try {
-            console.log('Uploading file:', file.name);
-            const result = await uploadImage(file);
-
-            if (result.error) {
-                console.error('Upload failed:', result.error);
-                alert(`Upload failed: ${result.error}`);
-                return '';
-            }
-
-            console.log('Upload successful:', result.url);
-            return result.url;
-        } catch (error) {
-            console.error('Upload exception:', error);
-            alert(`Upload error: ${error.message}`);
-            return '';
-        }
-    };
-
-    // Initialize BlockNote editor only when content is loaded
-    // We use a key on the component to force re-creation if needed, but conditional rendering is safer
-    const editor = useCreateBlockNote({
-        uploadFile: handleUpload,
-        initialContent: initialContent || undefined, // undefined lets it use internal default if null
-    }, [initialContent]); // Re-create editor if initialContent changes (though we only render when !isLoading)
+    }, [id, getWork]);
 
     // Auto-save functionality
     const handleSave = async () => {
@@ -95,19 +75,12 @@ const CaseStudy = () => {
 
         setIsSaving(true);
         try {
-            const content = editor.document;
-            const result = await saveCaseStudy(id, content, {
-                title: 'Case Study ' + id,
-                lastModified: new Date().toISOString()
-            });
+            const editorContent = editor.document;
+            console.log('Saving content:', editorContent);
 
-            if (result.error) {
-                console.error('Save failed:', result.error);
-                alert(`Save failed: ${result.error}`);
-            } else {
-                setLastSaved(new Date());
-                console.log('Case study saved successfully');
-            }
+            updateWork(id, { content: editorContent });
+            setLastSaved(new Date());
+            console.log('Case study saved successfully');
         } catch (error) {
             console.error('Save exception:', error);
             alert(`Save error: ${error.message}`);
@@ -116,15 +89,24 @@ const CaseStudy = () => {
         }
     };
 
+    // ===== CONDITIONAL RENDERING - AFTER ALL HOOKS =====
+
+    // Show loading state
     if (isLoading) {
         return (
             <div className="case-study-page">
-                <div className="case-study-header">
+                <div className="case-study-header" style={{
+                    position: 'sticky',
+                    top: 0,
+                    zIndex: 100,
+                    backgroundColor: '#fff',
+                    borderBottom: '1px solid #eee'
+                }}>
                     <div className="header-content">
                         <div className="header-left">
-                            <button className="back-button" onClick={() => navigate('/')}>
+                            <button className="back-button" onClick={() => navigate(backPath)}>
                                 <ArrowLeft size={20} />
-                                <span>Back to Portfolio</span>
+                                <span>{backLabel}</span>
                             </button>
                         </div>
                         <div className="header-right">
@@ -136,42 +118,69 @@ const CaseStudy = () => {
         );
     }
 
+    // Show error if editor failed to initialize
+    if (!editor) {
+        return (
+            <div className="case-study-page">
+                <div className="case-study-container">
+                    <div className="editor-wrapper">
+                        <p>Error: Editor failed to initialize. Please refresh the page.</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // Main render
     return (
         <div className="case-study-page">
-            <div className="case-study-header">
+            <div className="case-study-header" style={{
+                position: 'sticky',
+                top: 0,
+                zIndex: 100,
+                backgroundColor: '#fff',
+                borderBottom: '1px solid #eee'
+            }}>
                 <div className="header-content">
                     <div className="header-left">
                         <button
                             className="back-button"
-                            onClick={() => navigate('/')}
-                            aria-label="Go back to home"
+                            onClick={() => navigate(backPath)}
+                            aria-label="Go back"
                         >
                             <ArrowLeft size={20} />
-                            <span>Back to Portfolio</span>
+                            <span>{backLabel}</span>
                         </button>
                     </div>
                     <div className="header-right">
-                        {lastSaved && (
+                        {!hasEditAccess && <span style={{ marginRight: '1rem', color: '#666', fontSize: '0.9rem' }}>Read Only Mode</span>}
+                        {lastSaved && hasEditAccess && (
                             <span className="last-saved">
                                 Saved {lastSaved.toLocaleTimeString()}
                             </span>
                         )}
-                        <button
-                            className="save-button"
-                            onClick={handleSave}
-                            disabled={isSaving}
-                            aria-label="Save case study"
-                        >
-                            <Save size={18} />
-                            <span>{isSaving ? 'Saving...' : 'Save'}</span>
-                        </button>
+                        {hasEditAccess && (
+                            <button
+                                className="save-button"
+                                onClick={handleSave}
+                                disabled={isSaving}
+                                aria-label="Save case study"
+                            >
+                                <Save size={18} />
+                                <span>{isSaving ? 'Saving...' : 'Save'}</span>
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>
 
             <div className="case-study-container">
                 <div className="editor-wrapper">
-                    <BlockNoteView editor={editor} theme="light" />
+                    <BlockNoteView
+                        editor={editor}
+                        theme="light"
+                        editable={hasEditAccess}
+                    />
                 </div>
             </div>
         </div>

@@ -5,70 +5,9 @@ import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useCursor } from '../context/CursorContext';
+import { useCMS } from '../context/CMSContext';
 
 gsap.registerPlugin(ScrollTrigger);
-
-const worksData = [
-    {
-        id: 1,
-        title: 'Minimalist E-Commerce',
-        subtitle: 'Web Design',
-        tags: ['Shopify', 'UX Research'],
-        image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1000&auto=format&fit=crop',
-        backgroundColor: '#EBEBE6',
-    },
-    {
-        id: 2,
-        title: 'Financial Dashboard',
-        subtitle: 'Product Design',
-        tags: ['Fintech', 'Data Viz'],
-        image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000&auto=format&fit=crop',
-        backgroundColor: '#EBEBE6',
-    },
-    {
-        id: 3,
-        title: 'Travel App Concept',
-        subtitle: 'Mobile App',
-        tags: ['iOS', 'Prototyping'],
-        image: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=1000&auto=format&fit=crop',
-        backgroundColor: '#EBEBE6',
-    },
-    {
-        id: 4,
-        title: 'Brand Identity System',
-        subtitle: 'Branding',
-        tags: ['Identity', 'Strategy'],
-        image: 'https://images.unsplash.com/photo-1600607686527-6fb886090705?q=80&w=1000&auto=format&fit=crop',
-        backgroundColor: '#EBEBE6',
-    },
-    {
-        id: 5,
-        title: 'Health & Wellness App',
-        subtitle: 'Mobile App',
-        tags: ['Android', 'User Testing'],
-        image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=1000&auto=format&fit=crop',
-        backgroundColor: '#EBEBE6',
-    },
-    {
-        id: 6,
-        title: 'Modern Architecture',
-        subtitle: 'Photography',
-        tags: ['Art Direction', 'Editorial'],
-        image: 'https://images.unsplash.com/photo-1511818966892-d7d671e672a2?q=80&w=1000&auto=format&fit=crop',
-        backgroundColor: '#EBEBE6',
-    },
-    {
-        id: 7,
-        title: 'Tech Startup Landing',
-        subtitle: 'Web Design',
-        tags: ['SaaS', 'Conversion'],
-        image: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1000&auto=format&fit=crop',
-        backgroundColor: '#EBEBE6',
-    },
-];
-
-// Duplicate for infinite scroll (3 sets to ensure smooth looping)
-const works = [...worksData, ...worksData, ...worksData];
 
 const RandomReveal = ({ text, className }) => {
     const [displayText, setDisplayText] = useState('');
@@ -118,6 +57,7 @@ const RandomReveal = ({ text, className }) => {
 };
 
 const Hero = () => {
+    const { works: worksData } = useCMS();
     const { setCursorType } = useCursor();
     const [hoveredWork, setHoveredWork] = useState(null);
     const scrollRef = useRef(null);
@@ -127,7 +67,14 @@ const Hero = () => {
     const autoScrollTween = useRef(null);
     const nextStepTimeout = useRef(null);
 
+    // Duplicate for infinite scroll (3 sets to ensure smooth looping)
+    // Ensure we have data before duplicating
+    const works = worksData.length > 0 ? [...worksData, ...worksData, ...worksData] : [];
+
     useEffect(() => {
+        console.log('Hero works data:', worksData); // Debug log
+        if (works.length === 0) return;
+
         const container = scrollRef.current;
         if (!container) return;
 
@@ -142,7 +89,7 @@ const Hero = () => {
         return () => {
             killAnimations();
         };
-    }, []);
+    }, [works.length]);
 
     const killAnimations = () => {
         if (scrollRef.current) {
@@ -294,8 +241,6 @@ const Hero = () => {
                 </div>
             </div>
 
-
-
             <div
                 className="works-grid"
                 ref={scrollRef}
@@ -322,49 +267,98 @@ const Hero = () => {
                     onUserInteractionStart();
                 }}
             >
-                {works.map((work, index) => (
-                    <Link
-                        key={`${work.id}-${index}`}
-                        to={`/case-study/${work.id}`}
-                        style={{ textDecoration: 'none', color: 'inherit' }}
-                    >
-                        <motion.div
-                            className="work-card"
-                            style={{ backgroundColor: work.backgroundColor }}
-                            onHoverStart={() => setHoveredWork(work.id)}
-                            onHoverEnd={() => setHoveredWork(null)}
-                            onMouseEnter={() => setCursorType('card-hover')}
-                            onMouseLeave={() => setCursorType('default')}
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.5, delay: index * 0.05 }}
+                {works.length === 0 ? (
+                    <div style={{ padding: '2rem', textAlign: 'center', width: '100%' }}>
+                        No works found. Add some from the Admin Dashboard.
+                    </div>
+                ) : (
+                    works.map((work, index) => (
+                        <Link
+                            key={`${work.id}-${index}`}
+                            to={`/case-study/${work.id}`}
+                            style={{ textDecoration: 'none', color: 'inherit' }}
                         >
-                            <div className="work-content">
-                                <div className="work-header">
-                                    <h3 className="work-title">{work.title}</h3>
-                                    <div className="work-meta">
-                                        <span className="work-subtitle">{work.subtitle}</span>
-                                        <div className="work-tags">
-                                            {work.tags.map((tag, idx) => (
-                                                <span key={idx} className="work-tag">{tag}</span>
-                                            ))}
+                            <motion.div
+                                className="work-card"
+                                style={{
+                                    backgroundColor: work.backgroundType === 'color' ? work.backgroundValue : 'transparent',
+                                    backgroundImage: work.backgroundType === 'image' ? `url(${work.backgroundValue})` : 'none',
+                                    backgroundSize: 'cover',
+                                    backgroundPosition: 'center',
+                                    position: 'relative',
+                                    overflow: 'hidden'
+                                }}
+                                onHoverStart={() => setHoveredWork(work.id)}
+                                onHoverEnd={() => setHoveredWork(null)}
+                                onMouseEnter={() => setCursorType('card-hover')}
+                                onMouseLeave={() => setCursorType('default')}
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ duration: 0.5, delay: index * 0.05 }}
+                            >
+                                {/* Video Background */}
+                                {work.backgroundType === 'video' && (
+                                    <video
+                                        src={work.backgroundValue}
+                                        autoPlay
+                                        loop
+                                        muted
+                                        playsInline
+                                        style={{
+                                            position: 'absolute',
+                                            top: 0,
+                                            left: 0,
+                                            width: '100%',
+                                            height: '100%',
+                                            objectFit: 'cover',
+                                            zIndex: 0
+                                        }}
+                                    />
+                                )}
+
+                                {/* Blur Overlay */}
+                                {work.backgroundBlur > 0 && (
+                                    <div style={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        width: '100%',
+                                        height: '100%',
+                                        backdropFilter: `blur(${work.backgroundBlur}px)`,
+                                        zIndex: 1,
+                                        pointerEvents: 'none'
+                                    }} />
+                                )}
+
+                                <div className="work-content" style={{ position: 'relative', zIndex: 2 }}>
+                                    <div className="work-header">
+                                        <h3 className="work-title">{work.title}</h3>
+                                        <div className="work-meta">
+                                            <span className="work-subtitle">{work.subtitle}</span>
+                                            <div className="work-tags">
+                                                {work.tags.map((tag, idx) => (
+                                                    <span key={idx} className="work-tag">{tag}</span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="work-image-container">
+                                        <div className="work-image-wrapper">
+                                            <img
+                                                src={work.previewImage}
+                                                alt={work.title}
+                                                className="work-image"
+                                            />
                                         </div>
                                     </div>
                                 </div>
-
-                                <div className="work-image-container">
-                                    <img
-                                        src={work.image}
-                                        alt={work.title}
-                                        className="work-image"
-                                    />
-                                </div>
-                            </div>
-                        </motion.div>
-                    </Link>
-                ))}
-            </div>
-        </section>
+                            </motion.div>
+                        </Link >
+                    ))
+                )}
+            </div >
+        </section >
     );
 };
 

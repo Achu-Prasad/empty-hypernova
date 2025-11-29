@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Link, useLocation } from 'react-router-dom';
 import profileImg from '../assets/profile.png';
 import { useCursor } from '../context/CursorContext';
 
@@ -17,6 +18,12 @@ const Navbar = () => {
     const [time, setTime] = useState(new Date());
     const navRef = useRef(null);
     const { setCursorType } = useCursor();
+    const location = useLocation();
+
+    // Hide navbar on case study pages
+    if (location.pathname.startsWith('/case-study/')) {
+        return null;
+    }
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -34,28 +41,6 @@ const Navbar = () => {
         updateScrollbarWidth();
         window.addEventListener('resize', updateScrollbarWidth);
 
-        /*
-        const showAnim = gsap.from(navRef.current, {
-            yPercent: -100,
-            paused: true,
-            duration: 0.2
-        }).progress(1);
-
-        ScrollTrigger.create({
-            start: "top top",
-            end: 99999,
-            onUpdate: (self) => {
-                if (self.direction === -1) {
-                    showAnim.play();
-                    document.body.classList.remove('nav-hidden');
-                } else {
-                    showAnim.reverse();
-                    document.body.classList.add('nav-hidden');
-                }
-            }
-        });
-        */
-
         return () => window.removeEventListener('resize', updateScrollbarWidth);
     }, []);
 
@@ -72,18 +57,18 @@ const Navbar = () => {
                 transition={{ duration: 0.8, ease: "easeOut" }}
             >
                 <div className="nav-left">
-                    <div className="nav-profile">
+                    <Link to="/" className="nav-profile" style={{ textDecoration: 'none', color: 'inherit' }}>
                         <img src={profileImg} alt="Profile" className="profile-img" />
                         <div className="profile-text">
                             <span className="portfolio-of">portfolio of</span>
                             <span className="profile-name">Achu Prasad</span>
                         </div>
-                    </div>
+                    </Link>
                     <div className="nav-links">
                         {navItems.map((item) => (
                             <a
                                 key={item.id}
-                                href={`#${item.id}`}
+                                href={`/#${item.id}`} // Updated to work from other pages
                                 className="nav-link"
                                 onMouseEnter={() => setCursorType('link-hover')}
                                 onMouseLeave={() => setCursorType('default')}

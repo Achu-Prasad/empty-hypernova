@@ -1122,3 +1122,40 @@ body.nav-hidden .case-study-header {
     font-size: 1.25rem;
   }
 }
+
+.work-image-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 1rem;
+}
+
+.work-image-wrapper {
+  width: 100%;
+  max-width: 500px;
+  height: 280px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.work-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .work-image-container {
+    padding: 1.5rem 0.75rem;
+  }
+
+  .work-image-wrapper {
+    max-width: 100%;
+    height: 200px;
+  }
+}
