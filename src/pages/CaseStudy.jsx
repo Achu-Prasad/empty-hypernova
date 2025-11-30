@@ -3,18 +3,19 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useCreateBlockNote } from '@blocknote/react';
 import { BlockNoteView } from '@blocknote/mantine';
 import '@blocknote/mantine/style.css';
-import { ArrowLeft, Save, Upload } from 'lucide-react';
-import { uploadImage, saveCaseStudy, loadCaseStudy } from '../lib/supabase';
+import { ArrowLeft } from 'lucide-react';
+import { loadCaseStudy, supabase } from '../lib/supabase';
 import { useCursor } from '../context/CursorContext';
+import './CaseStudy.css';
 
 const CaseStudy = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { setCursorType } = useCursor();
-    const [isSaving, setIsSaving] = useState(false);
-    const [lastSaved, setLastSaved] = useState(null);
     const [initialContent, setInitialContent] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [workHeading, setWorkHeading] = useState('');
+    const [lastUpdated, setLastUpdated] = useState(null);
 
     // Reset cursor on mount
     useEffect(() => {
@@ -22,99 +23,46 @@ const CaseStudy = () => {
         return () => setCursorType('default');
     }, [setCursorType]);
 
-    // Default template content
-    const defaultContent = useMemo(() => [
-        {
-            type: 'heading',
-            content: 'New Case Study',
-        },
-        {
-            type: 'paragraph',
-            content: 'Start writing your case study here...',
-        }
-    ], []);
-
     // Load content on mount
     useEffect(() => {
         const loadContent = async () => {
             setIsLoading(true);
             try {
+                // Fetch work details for heading
+                const { data: work } = await supabase
+                    .from('works')
+                    .select('heading')
+                    .eq('id', id)
+                    .single();
+
+                if (work) {
+                    setWorkHeading(work.heading);
+                }
+
+                // Fetch case study content
                 const result = await loadCaseStudy(id);
                 if (result.content && !result.error) {
-                    console.log('Loaded content:', result.content);
                     setInitialContent(result.content);
                     if (result.metadata?.lastModified) {
-                        setLastSaved(new Date(result.metadata.lastModified));
+                        setLastUpdated(new Date(result.metadata.lastModified));
                     }
                 } else {
-                    console.log('No saved content found, using template');
-                    setInitialContent(defaultContent);
+                    console.log('No saved content found');
                 }
             } catch (error) {
                 console.error('Error loading content:', error);
-                setInitialContent(defaultContent);
             } finally {
                 setIsLoading(false);
             }
         };
 
         loadContent();
-    }, [id, defaultContent]);
+    }, [id]);
 
-    // Custom upload handler for images
-    const handleUpload = async (file) => {
-        try {
-            console.log('Uploading file:', file.name);
-            const result = await uploadImage(file);
-
-            if (result.error) {
-                console.error('Upload failed:', result.error);
-                alert(`Upload failed: ${result.error}`);
-                return '';
-            }
-
-            console.log('Upload successful:', result.url);
-            return result.url;
-        } catch (error) {
-            console.error('Upload exception:', error);
-            alert(`Upload error: ${error.message}`);
-            return '';
-        }
-    };
-
-    // Initialize BlockNote editor only when content is loaded
-    // We use a key on the component to force re-creation if needed, but conditional rendering is safer
+    // Initialize BlockNote editor in read-only mode
     const editor = useCreateBlockNote({
-        uploadFile: handleUpload,
-        initialContent: initialContent || undefined, // undefined lets it use internal default if null
-    }, [initialContent]); // Re-create editor if initialContent changes (though we only render when !isLoading)
-
-    // Auto-save functionality
-    const handleSave = async () => {
-        if (!editor) return;
-
-        setIsSaving(true);
-        try {
-            const content = editor.document;
-            const result = await saveCaseStudy(id, content, {
-                title: 'Case Study ' + id,
-                lastModified: new Date().toISOString()
-            });
-
-            if (result.error) {
-                console.error('Save failed:', result.error);
-                alert(`Save failed: ${result.error}`);
-            } else {
-                setLastSaved(new Date());
-                console.log('Case study saved successfully');
-            }
-        } catch (error) {
-            console.error('Save exception:', error);
-            alert(`Save error: ${error.message}`);
-        } finally {
-            setIsSaving(false);
-        }
-    };
+        initialContent: initialContent || undefined,
+    }, [initialContent]);
 
     if (isLoading) {
         return (
@@ -150,28 +98,26 @@ const CaseStudy = () => {
                             <span>Back to Portfolio</span>
                         </button>
                     </div>
+
+                    <div className="header-center">
+                        <h1 className="header-title">
+                            {workHeading} <span className="header-subtitle">Case Study</span>
+                        </h1>
+                    </div>
+
                     <div className="header-right">
-                        {lastSaved && (
-                            <span className="last-saved">
-                                Saved {lastSaved.toLocaleTimeString()}
+                        {lastUpdated && (
+                            <span className="last-updated">
+                                Last updated {lastUpdated.toLocaleDateString()}
                             </span>
                         )}
-                        <button
-                            className="save-button"
-                            onClick={handleSave}
-                            disabled={isSaving}
-                            aria-label="Save case study"
-                        >
-                            <Save size={18} />
-                            <span>{isSaving ? 'Saving...' : 'Save'}</span>
-                        </button>
                     </div>
                 </div>
             </div>
 
             <div className="case-study-container">
                 <div className="editor-wrapper">
-                    <BlockNoteView editor={editor} theme="light" />
+                    <BlockNoteView editor={editor} theme="light" editable={false} />
                 </div>
             </div>
         </div>

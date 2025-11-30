@@ -1,13 +1,25 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Supabase configuration
-// You need to replace these with your actual Supabase project credentials
-// Get these from: https://app.supabase.com/project/_/settings/api
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'YOUR_SUPABASE_URL';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'YOUR_SUPABASE_ANON_KEY';
+let supabaseClient;
+let supabaseInitError = null;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+if (!supabaseUrl || !supabaseKey || supabaseUrl === 'your_supabase_url' || supabaseKey === 'your_supabase_publishable_key') {
+    console.warn('Supabase credentials are missing! Please check your .env file.');
+    supabaseInitError = 'Supabase credentials missing in .env file';
+} else {
+    try {
+        supabaseClient = createClient(supabaseUrl, supabaseKey);
+    } catch (error) {
+        console.error('Supabase initialization error:', error);
+        supabaseInitError = error.message;
+    }
+}
+
+export const supabase = supabaseClient;
+export const initError = supabaseInitError;
 
 /**
  * Upload an image to Supabase Storage

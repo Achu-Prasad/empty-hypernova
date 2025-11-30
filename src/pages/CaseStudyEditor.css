@@ -1,0 +1,109 @@
+.case-study-editor {
+    min-height: 100vh;
+    background-color: #ffffff;
+    color: #18181b;
+    padding-top: 100px;
+    padding-bottom: 4rem;
+    font-family: 'Outfit', sans-serif;
+}
+
+.editor-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.editor-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e4e4e7;
+}
+
+.editor-title-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.editor-title {
+    font-size: 1.5rem;
+    font-family: var(--font-heading);
+    margin: 0;
+    color: #18181b;
+}
+
+.editor-subtitle {
+    color: #71717a;
+    font-size: 0.875rem;
+    font-family: var(--font-mono);
+}
+
+.editor-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.preview-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #d4d4d8;
+    background: transparent;
+    color: #52525b;
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.preview-btn:hover {
+    background: #f4f4f5;
+    color: #18181b;
+    border-color: #a1a1aa;
+}
+
+.save-content-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    background: #18181b;
+    color: #ffffff;
+    border: none;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.save-content-btn:hover {
+    background: #27272a;
+    transform: translateY(-1px);
+}
+
+/* Editor Wrapper */
+.dark-editor-wrapper {
+    background: #ffffff;
+    border: 1px solid #e4e4e7;
+    border-radius: 12px;
+    min-height: 600px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+/* Customizing BlockNote to fit light theme */
+.bn-container {
+    background-color: transparent !important;
+}
+
+.bn-editor {
+    background-color: transparent !important;
+    color: #18181b !important;
+}

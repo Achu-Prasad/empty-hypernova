@@ -8,67 +8,7 @@ import { useCursor } from '../context/CursorContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const worksData = [
-    {
-        id: 1,
-        title: 'Minimalist E-Commerce',
-        subtitle: 'Web Design',
-        tags: ['Shopify', 'UX Research'],
-        image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1000&auto=format&fit=crop',
-        backgroundColor: '#EBEBE6',
-    },
-    {
-        id: 2,
-        title: 'Financial Dashboard',
-        subtitle: 'Product Design',
-        tags: ['Fintech', 'Data Viz'],
-        image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000&auto=format&fit=crop',
-        backgroundColor: '#EBEBE6',
-    },
-    {
-        id: 3,
-        title: 'Travel App Concept',
-        subtitle: 'Mobile App',
-        tags: ['iOS', 'Prototyping'],
-        image: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=1000&auto=format&fit=crop',
-        backgroundColor: '#EBEBE6',
-    },
-    {
-        id: 4,
-        title: 'Brand Identity System',
-        subtitle: 'Branding',
-        tags: ['Identity', 'Strategy'],
-        image: 'https://images.unsplash.com/photo-1600607686527-6fb886090705?q=80&w=1000&auto=format&fit=crop',
-        backgroundColor: '#EBEBE6',
-    },
-    {
-        id: 5,
-        title: 'Health & Wellness App',
-        subtitle: 'Mobile App',
-        tags: ['Android', 'User Testing'],
-        image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=1000&auto=format&fit=crop',
-        backgroundColor: '#EBEBE6',
-    },
-    {
-        id: 6,
-        title: 'Modern Architecture',
-        subtitle: 'Photography',
-        tags: ['Art Direction', 'Editorial'],
-        image: 'https://images.unsplash.com/photo-1511818966892-d7d671e672a2?q=80&w=1000&auto=format&fit=crop',
-        backgroundColor: '#EBEBE6',
-    },
-    {
-        id: 7,
-        title: 'Tech Startup Landing',
-        subtitle: 'Web Design',
-        tags: ['SaaS', 'Conversion'],
-        image: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1000&auto=format&fit=crop',
-        backgroundColor: '#EBEBE6',
-    },
-];
-
-// Duplicate for infinite scroll (3 sets to ensure smooth looping)
-const works = [...worksData, ...worksData, ...worksData];
+// Works data is now fetched from Supabase
 
 const RandomReveal = ({ text, className }) => {
     const [displayText, setDisplayText] = useState('');
@@ -117,9 +57,14 @@ const RandomReveal = ({ text, className }) => {
     );
 };
 
+import { supabase } from '../lib/supabase';
+
+// ... (keep imports)
+
 const Hero = () => {
     const { setCursorType } = useCursor();
     const [hoveredWork, setHoveredWork] = useState(null);
+    const [works, setWorks] = useState([]);
     const scrollRef = useRef(null);
     const isHovering = useRef(false);
     const isManualScrolling = useRef(false);
@@ -127,7 +72,49 @@ const Hero = () => {
     const autoScrollTween = useRef(null);
     const nextStepTimeout = useRef(null);
 
+    const fetchWorks = async () => {
+        if (!supabase) {
+            console.error('Supabase client is not initialized. Check your .env file.');
+            return;
+        }
+
+        try {
+            const { data, error } = await supabase
+                .from('works')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                console.error('Error fetching works:', error);
+                return;
+            }
+
+            if (data && data.length > 0) {
+                const formattedWorks = data.map(work => ({
+                    id: work.id,
+                    title: work.heading,
+                    subtitle: work.subheading,
+                    image: work.preview_image,
+                    backgroundColor: work.background_color,
+                    tags: work.tags || []
+                }));
+
+                // Duplicate for infinite scroll (3 sets)
+                setWorks([...formattedWorks, ...formattedWorks, ...formattedWorks]);
+            }
+        } catch (error) {
+            console.error('Exception fetching works:', error);
+        }
+    };
+
     useEffect(() => {
+        fetchWorks();
+    }, []);
+
+
+    useEffect(() => {
+        if (works.length === 0) return;
+
         const container = scrollRef.current;
         if (!container) return;
 
@@ -142,7 +129,7 @@ const Hero = () => {
         return () => {
             killAnimations();
         };
-    }, []);
+    }, [works]); // Re-run when works are loaded
 
     const killAnimations = () => {
         if (scrollRef.current) {
