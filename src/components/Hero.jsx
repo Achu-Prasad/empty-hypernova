@@ -96,6 +96,10 @@ const Hero = () => {
                     subtitle: work.subheading,
                     image: work.preview_image,
                     backgroundColor: work.background_color,
+                    backgroundImage: work.background_image,
+                    backgroundVideo: work.background_video,
+                    backgroundType: work.background_type || (work.background_video ? 'video' : (work.background_image ? 'image' : 'color')),
+                    backgroundBlur: work.background_blur || 0,
                     tags: work.tags || []
                 }));
 
@@ -317,7 +321,12 @@ const Hero = () => {
                     >
                         <motion.div
                             className="work-card"
-                            style={{ backgroundColor: work.backgroundColor }}
+                            style={{
+                                backgroundColor: work.backgroundColor,
+                                backgroundImage: work.backgroundType === 'image' && work.backgroundImage ? `url(${work.backgroundImage})` : 'none',
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center'
+                            }}
                             onHoverStart={() => setHoveredWork(work.id)}
                             onHoverEnd={() => setHoveredWork(null)}
                             onMouseEnter={() => setCursorType('card-hover')}
@@ -326,7 +335,44 @@ const Hero = () => {
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.5, delay: index * 0.05 }}
                         >
-                            <div className="work-content">
+                            {work.backgroundType === 'video' && work.backgroundVideo && (
+                                <video
+                                    src={work.backgroundVideo}
+                                    autoPlay
+                                    loop
+                                    muted
+                                    playsInline
+                                    style={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover',
+                                        zIndex: 0,
+                                        borderRadius: '6px'
+                                    }}
+                                />
+                            )}
+
+                            {/* Blur Overlay */}
+                            {work.backgroundBlur > 0 && (
+                                <div
+                                    style={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        width: '100%',
+                                        height: '100%',
+                                        backdropFilter: `blur(${work.backgroundBlur}px)`,
+                                        zIndex: 1,
+                                        borderRadius: '6px',
+                                        pointerEvents: 'none'
+                                    }}
+                                />
+                            )}
+
+                            <div className="work-content" style={{ position: 'relative', zIndex: 2 }}>
                                 <div className="work-header">
                                     <h3 className="work-title">{work.title}</h3>
                                     <div className="work-meta">

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabase';
-import { Plus, LogOut, LayoutGrid, Edit2, Trash2, FileText, ExternalLink } from 'lucide-react';
+import { Plus, LogOut, LayoutGrid, Edit2, Trash2, FileText, ExternalLink, AlertTriangle } from 'lucide-react';
 import './AdminDashboard.css';
 
 const AdminDashboard = () => {
@@ -10,6 +10,7 @@ const AdminDashboard = () => {
     const navigate = useNavigate();
     const [works, setWorks] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [deleteModal, setDeleteModal] = useState(null); // { id, title }
 
     useEffect(() => {
         fetchWorks();
@@ -40,20 +41,21 @@ const AdminDashboard = () => {
         }
     };
 
-    const handleDelete = async (id) => {
-        if (!window.confirm('Are you sure you want to delete this work? This action cannot be undone.')) return;
+    const confirmDelete = async () => {
+        if (!deleteModal) return;
 
         try {
             const { error } = await supabase
                 .from('works')
                 .delete()
-                .eq('id', id);
+                .eq('id', deleteModal.id);
 
             if (error) throw error;
-            setWorks(works.filter(work => work.id !== id));
+            setWorks(works.filter(work => work.id !== deleteModal.id));
+            setDeleteModal(null);
         } catch (error) {
             console.error('Error deleting work:', error);
-            alert('Failed to delete work');
+            alert('Failed to delete work: ' + error.message);
         }
     };
 
@@ -117,7 +119,11 @@ const AdminDashboard = () => {
                                         <Link to={`/admin/work/${work.id}`} className="action-btn" title="Edit Details">
                                             <Edit2 size={16} /> Edit
                                         </Link>
-                                        <button onClick={() => handleDelete(work.id)} className="action-btn delete" title="Delete">
+                                        <button
+                                            onClick={() => setDeleteModal({ id: work.id, title: work.heading })}
+                                            className="action-btn delete"
+                                            title="Delete"
+                                        >
                                             <Trash2 size={16} />
                                         </button>
                                     </div>
@@ -125,9 +131,73 @@ const AdminDashboard = () => {
                             </div>
                         ))}
                     </div>
-
                 )}
             </div>
+
+            {/* Custom Delete Confirmation Modal */}
+            {deleteModal && (
+                <div style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: 'rgba(0,0,0,0.7)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    zIndex: 9999
+                }}>
+                    <div style={{
+                        background: 'white',
+                        padding: '30px',
+                        borderRadius: '12px',
+                        maxWidth: '500px',
+                        width: '90%'
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+                            <AlertTriangle size={24} color="#ef4444" />
+                            <h2 style={{ margin: 0, fontSize: '20px', fontWeight: '600' }}>Confirm Deletion</h2>
+                        </div>
+                        <p style={{ marginBottom: '20px', color: '#666', lineHeight: '1.6' }}>
+                            Are you sure you want to delete <strong>"{deleteModal.title}"</strong>?
+                            <br /><br />
+                            This will permanently remove the work and all its associated content (case study, images, etc.) from the database.
+                        </p>
+                        <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+                            <button
+                                onClick={() => setDeleteModal(null)}
+                                style={{
+                                    padding: '10px 20px',
+                                    border: '1px solid #ddd',
+                                    background: 'white',
+                                    borderRadius: '6px',
+                                    cursor: 'pointer',
+                                    fontSize: '14px',
+                                    fontWeight: '500'
+                                }}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={confirmDelete}
+                                style={{
+                                    padding: '10px 20px',
+                                    border: 'none',
+                                    background: '#ef4444',
+                                    color: 'white',
+                                    borderRadius: '6px',
+                                    cursor: 'pointer',
+                                    fontSize: '14px',
+                                    fontWeight: '500'
+                                }}
+                            >
+                                Delete Permanently
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

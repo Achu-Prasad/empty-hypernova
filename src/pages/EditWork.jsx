@@ -178,33 +178,80 @@ const EditWork = () => {
                             </div>
 
                             <div className="form-group">
-                                <label>Background Image (Hero)</label>
-                                <div className="image-upload-area">
-                                    {formData.background_image ? (
-                                        <>
-                                            <img src={formData.background_image} alt="Background" className="upload-preview" />
-                                            <button
-                                                type="button"
-                                                className="remove-image-btn"
-                                                onClick={() => setFormData(prev => ({ ...prev, background_image: '' }))}
-                                            >
-                                                <X size={16} />
-                                            </button>
-                                        </>
-                                    ) : (
-                                        <label className="upload-placeholder">
-                                            <input
-                                                type="file"
-                                                hidden
-                                                accept="image/*"
-                                                onChange={(e) => handleImageUpload(e, 'background_image')}
-                                            />
-                                            {uploading ? <Loader2 className="animate-spin" /> : <ImageIcon size={24} />}
-                                            <span>Click to upload</span>
-                                        </label>
-                                    )}
-                                </div>
+                                <label>Background Type</label>
+                                <select
+                                    name="background_type"
+                                    value={formData.background_type}
+                                    onChange={handleInputChange}
+                                    className="form-input"
+                                >
+                                    <option value="color">Solid Color</option>
+                                    <option value="image">Image</option>
+                                    <option value="video">Video</option>
+                                </select>
                             </div>
+
+                            {formData.background_type === 'image' && (
+                                <div className="form-group">
+                                    <label>Background Image (Hero)</label>
+                                    <div className="image-upload-area">
+                                        {formData.background_image ? (
+                                            <>
+                                                <img src={formData.background_image} alt="Background" className="upload-preview" />
+                                                <button
+                                                    type="button"
+                                                    className="remove-image-btn"
+                                                    onClick={() => setFormData(prev => ({ ...prev, background_image: '' }))}
+                                                >
+                                                    <X size={16} />
+                                                </button>
+                                            </>
+                                        ) : (
+                                            <label className="upload-placeholder">
+                                                <input
+                                                    type="file"
+                                                    hidden
+                                                    accept="image/*"
+                                                    onChange={(e) => handleImageUpload(e, 'background_image')}
+                                                />
+                                                {uploading ? <Loader2 className="animate-spin" /> : <ImageIcon size={24} />}
+                                                <span>Click to upload</span>
+                                            </label>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+
+                            {formData.background_type === 'video' && (
+                                <div className="form-group">
+                                    <label>Background Video (Hero)</label>
+                                    <div className="image-upload-area">
+                                        {formData.background_video ? (
+                                            <>
+                                                <video src={formData.background_video} className="upload-preview" controls />
+                                                <button
+                                                    type="button"
+                                                    className="remove-image-btn"
+                                                    onClick={() => setFormData(prev => ({ ...prev, background_video: '' }))}
+                                                >
+                                                    <X size={16} />
+                                                </button>
+                                            </>
+                                        ) : (
+                                            <label className="upload-placeholder">
+                                                <input
+                                                    type="file"
+                                                    hidden
+                                                    accept="video/*"
+                                                    onChange={(e) => handleImageUpload(e, 'background_video')}
+                                                />
+                                                {uploading ? <Loader2 className="animate-spin" /> : <Upload size={24} />}
+                                                <span>Click to upload video</span>
+                                            </label>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
 
@@ -213,8 +260,8 @@ const EditWork = () => {
                         <div className="section-label">Appearance</div>
                         <div className="form-row">
                             <div className="form-group">
-                                <label>Background Color</label>
-                                <div className="color-picker-wrapper">
+                                <label style={{ color: formData.background_type !== 'color' ? '#a1a1aa' : 'inherit' }}>Background Color</label>
+                                <div className="color-picker-wrapper" style={{ opacity: formData.background_type !== 'color' ? 0.5 : 1, pointerEvents: formData.background_type !== 'color' ? 'none' : 'auto' }}>
                                     <div
                                         className="color-preview"
                                         style={{ backgroundColor: formData.background_color }}
@@ -225,6 +272,7 @@ const EditWork = () => {
                                             value={formData.background_color}
                                             onChange={handleInputChange}
                                             className="color-input-hidden"
+                                            disabled={formData.background_type !== 'color'}
                                         />
                                     </div>
                                     <input
@@ -234,6 +282,7 @@ const EditWork = () => {
                                         onChange={handleInputChange}
                                         className="form-input"
                                         style={{ width: '120px' }}
+                                        disabled={formData.background_type !== 'color'}
                                     />
                                 </div>
                             </div>

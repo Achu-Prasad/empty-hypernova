@@ -13,6 +13,7 @@ create table works (
   heading text,
   subheading text,
   preview_image text,
+  background_type text default 'color',
   background_color text default '#000000',
   background_image text,
   background_video text,
